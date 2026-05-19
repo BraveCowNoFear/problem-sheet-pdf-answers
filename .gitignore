@@ -1,0 +1,26 @@
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+
+# Local job outputs
+tmp/
+jobs/
+inputs/
+source_pages/
+latex/
+assets/
+output/
+rendered/
+qa/
+build.log
+
+# Private or copyrighted samples
+samples/
+fixtures/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff

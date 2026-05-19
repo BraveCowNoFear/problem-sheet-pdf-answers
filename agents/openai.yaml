@@ -1,0 +1,4 @@
+interface:
+  display_name: "Problem Sheet PDF Answers"
+  short_description: "Generate verified English answer PDFs for problem sheets."
+  default_prompt: "Generate a fully verified English answer PDF for this problem sheet."
