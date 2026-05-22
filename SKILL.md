@@ -61,7 +61,7 @@ Each job must keep enough evidence for another agent to audit the result:
 - `source_pages/` contains one rendered source PNG per original page.
 - `latex/` contains the complete LaTeX project and deterministic figure sources.
 - `assets/` contains all cropped, plotted, or generated non-imagegen visual assets used by LaTeX.
-- `output/answers.pdf` is the compiled answer PDF.
+- `output/<original-pdf-stem> anwser.pdf` is the compiled answer PDF. For example, a source file named `xxxx.pdf` must produce `output/xxxx anwser.pdf`. Preserve the original filename stem exactly and append the literal string ` anwser` before `.pdf`.
 - `rendered/pass_1/` and `rendered/pass_2/` contain one rendered PNG per answer PDF page after each main-agent visual QA pass.
 - `rendered/pass_3/` and `rendered/pass_4/` contain one rendered PNG per answer PDF page after each subagent content QA pass.
 - `qa/question_inventory.json` records every source question/subpart with source page, answer location, status, and verification notes.
@@ -116,6 +116,7 @@ Any uncertainty about a problem statement must be resolved from the source PDF o
 
 Return the final answer PDF path, the LaTeX project path, and a short QA summary covering:
 
+- final answer PDF filename follows `xxxx anwser.pdf`, where `xxxx.pdf` is the original source PDF name;
 - total source pages and answer pages;
 - number of questions/subparts answered;
 - pass 1 and pass 2 visual QA status;
