@@ -54,14 +54,15 @@ The skill is a workflow contract rather than a hosted service. It does not requi
 
 The skill uses neutral roles so it can adapt to different agents:
 
-- `main agent`: prepares the job workspace, reads the source, solves the sheet, builds the LaTeX project, compiles the PDF, and completes two visual QA rounds.
-- `final QA worker`: independently verifies question coverage and solution correctness, fixes defects when possible, rebuilds, rerenders, and records two content QA rounds.
+- `main agent`: coordinates only. It prepares the job workspace, copies inputs, assigns work, checks handoff records and required artifacts, integrates results, and delivers the final paths after all four QA passes are complete. It does not generate the answer PDF itself.
+- `production subagent`: renders every source page, inventories questions and subparts, solves the sheet, builds the LaTeX project and deterministic figure assets, compiles and renders the answer PDF, and completes page-by-page QA passes 1–2, fixing, rebuilding, and rerendering defects before returning the completed project.
+- `final QA subagent`: independently verifies question coverage and solution correctness in page-by-page content QA passes 3–4, fixes defects where possible, rebuilds, rerenders, and records the checks.
 
-If your runtime supports subagents, use one independent final QA worker exactly as described in `SKILL.md`. If it does not, perform the same acceptance checks sequentially and keep the artifact record explicit.
+If your runtime supports subagents, follow the per-PDF workflow in `SKILL.md`: each PDF gets its own job directory, exactly one dedicated production subagent, and then exactly one dedicated independent final QA subagent. For multiple PDFs, run these jobs in parallel within available agent capacity; each subagent handles only its assigned PDF. If the runtime does not support subagents, perform the same acceptance checks sequentially for each PDF and keep the artifact record explicit.
 
 ## Artifact Contract
 
-Each run should keep enough evidence for another agent or reviewer to audit the result:
+Each PDF's job should keep enough evidence for another agent or reviewer to audit the result:
 
 - source problem sheet and page renders
 - complete question inventory

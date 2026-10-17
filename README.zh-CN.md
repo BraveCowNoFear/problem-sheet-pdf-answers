@@ -54,14 +54,15 @@ python -m pip install -r requirements.txt
 
 这个 skill 用中性的角色名适配不同 agent：
 
-- `main agent`：准备 job workspace、读取原题、求解、创建 LaTeX 项目、编译 PDF，并完成两轮视觉 QA。
-- `final QA worker`：独立核对题目覆盖和解答正确性，能修就直接修，随后重编译、重渲染，并记录两轮内容 QA。
+- `main agent`：只负责协调。准备 job workspace、复制输入、分配任务、核对交接记录与必需产物、整合结果，并在四轮 QA 全部完成后交付最终路径；不直接生成答案 PDF。
+- `production subagent`：渲染全部原题页面、建立题目与小问清单、求解、创建 LaTeX 项目和确定性图表资产、编译并渲染答案 PDF，完成第 1–2 轮逐页 QA，修复问题、重编译和重渲染后交回完整项目。
+- `final QA subagent`：在第 3–4 轮逐页内容 QA 中独立核对题目覆盖和解答正确性，能修就直接修，随后重编译、重渲染，并记录检查结果。
 
-如果 runtime 支持 subagent，就严格按 `SKILL.md` 使用一个独立 final QA worker；如果不支持，就顺序执行同等验收检查，并在 artifact 记录中说明限制。
+如果 runtime 支持 subagent，就按 `SKILL.md` 对每份 PDF 独立执行工作流：每份 PDF 使用自己的 job 目录，由且仅由一个专属 production subagent 制作，随后交给且仅交给一个专属、独立的 final QA subagent。多份 PDF 在可用 Agent 并发容量内并行处理，每个子 Agent 只负责分配给自己的那份 PDF。如果 runtime 不支持 subagent，就对每份 PDF 顺序执行同等验收检查，并在 artifact 记录中说明限制。
 
 ## Artifact 契约
 
-每次运行都应保留足够证据，方便另一个 agent 或审阅者复核：
+每份 PDF 的任务都应保留足够证据，方便另一个 agent 或审阅者复核：
 
 - 原题 PDF 和原题逐页渲染
 - 完整 question inventory
